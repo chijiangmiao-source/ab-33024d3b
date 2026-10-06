@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>轨道载荷升级控制台</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>轨道载荷升级控制台</h1>
+  <span id="health" class="health">健康检查…</span>
+</header>
+<main>
+  <aside>
+    <section class="panel">
+      <h2>创建双槽设备</h2>
+      <label>设备名称
+        <input id="dev-name" maxlength="64" value="载荷-01">
+      </label>
+      <label>当前版本号
+        <input id="dev-version" type="number" min="0" value="1">
+      </label>
+      <label>镜像内容（模拟）
+        <textarea id="dev-image" rows="3">PAYLOAD-IMAGE-V1</textarea>
+      </label>
+      <button id="btn-create">创建设备</button>
+    </section>
+    <section class="panel">
+      <h2>设备列表</h2>
+      <ul id="device-list" class="device-list"></ul>
+    </section>
+  </aside>
+
+  <section id="device-view">
+    <div id="empty-hint" class="panel muted-panel">请选择或创建一个设备。</div>
+    <div id="device-detail" hidden>
+      <section class="panel">
+        <h2>设备概览</h2>
+        <div class="overview">
+          <div>名称：<b id="ov-name"></b></div>
+          <div>ID：<code id="ov-id"></code></div>
+          <div>确认代次：<b id="ov-gen"></b></div>
+          <div>活动槽位：<b id="ov-active"></b></div>
+          <div>引导裁决：<span id="ov-verdict" class="verdict"></span></div>
+        </div>
+        <button id="btn-reopen">重新打开设备视图</button>
+      </section>
+
+      <section class="panel">
+        <h2>槽位清单</h2>
+        <div id="slots" class="slots"></div>
+      </section>
+
+      <section class="panel">
+        <h2>候选升级</h2>
+        <div class="row">
+          <label>候选版本号
+            <input id="cand-version" type="number" min="0" value="2">
+          </label>
+          <label>预期代次（并发仲裁依据）
+            <input id="cand-gen" type="number" readonly>
+          </label>
+        </div>
+        <label>候选镜像内容（模拟）
+          <textarea id="cand-image" rows="3">PAYLOAD-IMAGE-V2</textarea>
+        </label>
+        <div class="btn-row">
+          <button id="btn-write">① 写入候选</button>
+          <button id="btn-verify">② 摘要校验</button>
+          <button id="btn-confirm">③ 确认切换</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>故障注入</h2>
+        <label class="chk">
+          <input type="checkbox" id="corrupt">
+          模拟撕裂写入（截断候选镜像，造成摘要不符）
+        </label>
+        <button id="btn-power" class="danger">模拟断电</button>
+        <p class="muted">断电后点击「重新打开设备视图」，观察恢复裁决依据。</p>
+      </section>
+
+      <section class="panel">
+        <h2>恢复裁决依据</h2>
+        <p id="rec-summary"></p>
+        <p id="rec-consistent" class="muted"></p>
+        <table>
+          <thead>
+            <tr><th>槽位</th><th>状态</th><th>版本</th><th>摘要完整</th><th>可引导</th><th>裁决理由</th></tr>
+          </thead>
+          <tbody id="rec-checks"></tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2>诊断事件</h2>
+        <ul id="events" class="events"></ul>
+      </section>
+    </div>
+  </section>
+</main>
+<div id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
